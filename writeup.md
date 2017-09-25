@@ -13,13 +13,13 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./output_images/origin_undistorted_grids.png "Undistorted"
-[image2]: ./test_images/test1.jpg "Road Transformed"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
+[image1]: ./output_images/origin_undistorted_grids.png "Undistorted Grids"
+[image2]: ./output_images/origin_undistorted.png "Undistorted"
+[image3]: ./output_images/src_reigen.png "Corners"
+[image4]: ./output_images/warped.png "Warp Example"
+[image5]: ./output_images/ "Fit Visual"
+[image6]: ./output_images/ "Output"
+[video1]: ./output_images/ "Video"
 
 
 ### Camera Calibration
@@ -38,10 +38,18 @@ I save the camera matrix and distortion coefficients to `calibration_wide/wide_d
 
 ### Pipeline (single images)
 
-#### 1. Provide an example of a distortion-corrected image.
+#### 1. Load clibration parameters and distortion-corrected image.
 
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
+Load clibration parameters from `calibration_wide/wide_dist_pickle.p` and use `cv2.undistort` to undistort image.
+below is the image, which I apply the distortion correction:
 ![alt text][image2]
+
+#### 2. perspective transfrom
+
+I use `cv2.getPerspectiveTransform` to generate perspective transfrom matrix. I choosing four source points manually in original image as Below.
+![alt text][image3]
+
+Then, Warp the image using the perspective transform.
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
