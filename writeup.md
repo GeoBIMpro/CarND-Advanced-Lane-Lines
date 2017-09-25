@@ -17,10 +17,10 @@ The goals / steps of this project are the following:
 [image2]: ./output_images/origin_undistorted.png "Undistorted"
 [image3]: ./output_images/src_reigen.png "Corners"
 [image4]: ./output_images/warped.png "Warp Example"
-[image5]: ./output_images/ "Fit Visual"
-[image6]: ./output_images/ "Output"
-[video1]: ./output_images/ "Video"
-
+[image5]: ./output_images/combined_binary.png "Binary Image"
+[image6]: ./output_images/base_position.png "Laen line base"
+[image7]: ./output_images/polyfit_left_right.png "Polyfit"
+[image8]: ./output_images/draw_lane_area.png "Project to Ori"
 
 ### Camera Calibration
 
@@ -50,71 +50,56 @@ I use `cv2.getPerspectiveTransform` to generate perspective transfrom matrix. I 
 ![alt text][image3]
 
 Then, Warp the image using the perspective transform.
-
-#### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
-
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
-
-![alt text][image3]
-
-#### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
-
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
-
-```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
-```
-
-This resulted in the following source and destination points:
-
-| Source        | Destination   |
-|:-------------:|:-------------:|
-| 585, 460      | 320, 0        |
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
-
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
-
 ![alt text][image4]
 
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+#### 3. binary image
+
+I convert the image to HLS color. Then used a combination of color(S channel) and gradient thresholds(L channel) to generate a binary image (steps at cell 23 function **pipline()** in `work.ipynb`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+For the threshosds, I use interact slide bar to find the best min,max value.
 
 ![alt text][image5]
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+#### 4. Lane lines polynomial
 
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
-
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+1) First I use histogram of the lower part of the binary image to find the base left,right lane start position. Code is in cell 27.
+ In below image, we can see the left lane bottom x = 370, right lane bottom x = 1100.
 
 ![alt text][image6]
+
+I slide the image to 9 block(horizontally). for each slice , I apply the histogram as above, and find lane line up to the top of the frame.
+
+![alt text][image7]
+
+#### 5. radius of curvature
+
+I did this in in cell 36 of `work.ipynb`. I use the y value corresponding to the bottom of the image.
+```python
+curvature = ((1 + (2 * line_fit[0] * y_eval + line_fit[1]) ** 2) ** 1.5) \
+                             / np.absolute(2 * line_fit[0])
+```
+
+#### 6. porject back
+
+I implemented this step in cell 37 `draw_lane_area()` in `work.ipynb` Here is an example of my result on a test image:
+
+![alt text][image8]
 
 ---
 
 ### Pipeline (video)
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+Here's a [link to my video resul](https://youtu.be/4D2qxNSRwCo)
 
-Here's a [link to my video result](./project_video.mp4)
+the video is in outpu_videos/project_video.mp4
 
 ---
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+#### 1. It is difficult to manually select the source , destinate points , which used to calculate perspective transform matrix.
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+#### 2. the thresholds ,filter binary image, didnot work well , when the road surface color changed.
+
+#### 3. curvature is not accurate.
