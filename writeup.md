@@ -90,7 +90,7 @@ I implemented this step in cell 37 `draw_lane_area()` in `work.ipynb` Here is an
 
 ### Pipeline (video)
 
-Here's a [link to my video resul](https://youtu.be/4D2qxNSRwCo)
+Here's a [link to my video result](https://youtu.be/4D2qxNSRwCo)
 
 the video is in outpu_videos/project_video.mp4
 
