@@ -36,7 +36,7 @@ I save the camera matrix and distortion coefficients to `calibration_wide/wide_d
 
 ![alt text][image1]
 
-### Pipeline (single images)
+### Pipeline
 
 #### 1. Load clibration parameters and distortion-corrected image.
 
