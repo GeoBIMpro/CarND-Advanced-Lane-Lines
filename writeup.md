@@ -86,11 +86,12 @@ I implemented this step in cell 37 `draw_lane_area()` in `work.ipynb` Here is an
 
 ![alt text][image8]
 
+
 ---
 
 ### Pipeline (video)
 
-Here's a [link to my video result](https://youtu.be/4D2qxNSRwCo)
+Here's a [link to my video result](https://youtu.be/lDvdRCYOslc)
 
 the video is in outpu_videos/project_video.mp4
 
@@ -98,8 +99,12 @@ the video is in outpu_videos/project_video.mp4
 
 ### Discussion
 
-#### 1. It is difficult to manually select the source , destinate points , which used to calculate perspective transform matrix.
+This project was surprisingly difficult and time consuming. I use a lot time to tune the thresholds parameters and perspective transform matrix.
 
-#### 2. the thresholds ,filter binary image, didnot work well , when the road surface color changed.
+1) It is difficult to manually select the source , destinate points , which used to calculate perspective transform matrix.
+I am not sure how to solve the problem.
 
-#### 3. curvature is not accurate.
+
+ 2) the thresholds ,filter binary image, didnot work well , when the road surface color changed.
+
+I find if just use yellow and white color thresholds to filter the image, it works well with the project_video.mp4. Sobel Operator doesnot work well when has tree shadow on the road.
